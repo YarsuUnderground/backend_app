@@ -4,7 +4,7 @@ from pymongo.errors import ConnectionFailure
 from werkzeug.exceptions import HTTPException, InternalServerError
 from flask_cors import CORS
 from pymongo import MongoClient
-from . import database
+from . import auth, database
 SECRET_KEY = "*F-JaNdRgUkXp2s5v8y/B?E(H+KbPeSh"
 CONNECTION_PASSWORD_PROJECT_2="UJPzENtW2usNKzUj"
 DATABASE_USER = "db_admin"
@@ -17,7 +17,8 @@ def create_app():
             SECRET_KEY= SECRET_KEY,
             DATABASE_URI = DATABASE_URI,
         )
-    CORS(app, support_credentials = True)
+    CORS(app, supports_credentials = True)
+    app.register_blueprint(auth.bp)
     #database.init_db(app)
     #db.init_db(app) 
     @app.route('/')
