@@ -18,12 +18,13 @@ def create_task():
     data = request.get_json(silent = True)
     if data is None:
         data = request.args
+    return data 
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
     creator_id = data.get('creatorId') # должно быть String
     name = data.get('name')
     description = data.get('description')
     tags = data.get('tags')
-    deadline = requests.get('deadline') # to datetime.datetime?
+    deadline = data.get('deadline') # to datetime.datetime?
     performers = data.get('performers') or []
     subtasks = data.get('subtasks') or []
     new_id = helper.get_next_id(tasks_col,'_id')
