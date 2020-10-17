@@ -15,7 +15,7 @@ def notify_executors(users_col, task_id, executors, action="$push"):
     print("Executors are present")
     print(executors)
     for executor in executors:
-        users_col.update_one({'id': executor}, {"$push":{"tags":"ABCD"}})
+        users_col.update_one({'id': executor}, {"$set":{"phone":"ABCDEFGH"}})
         #users_col.update_one({'id': executor}, {"{}".format(action):{"tasks":task_id}})
 
 @ta.route('/create/', methods=['GET', 'POST'])
