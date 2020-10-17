@@ -27,7 +27,7 @@ def register():
     password = data.get('password')
     phone = data.get('phone')
     token = hashlib.md5((first_name + last_name + login).encode() + os.urandom(16)).hexdigest()
-    id = helper.get_next_id(users_col)
+    id = helper.get_next_id(users_col, '_id')
     user = {'_id':id, 'login': login,'first_name':first_name, 'last_name':last_name, 'password':generate_password_hash(password), 'phone': phone, 'isAdmin':False, 'tasks':[], 'token':token}
     doc = users_col.insert_one(user)
     #session.clear()
