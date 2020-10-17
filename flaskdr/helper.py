@@ -4,7 +4,7 @@ def get_next_id(collection, id_col_name):
         return 1
     docs = collection.find().sort(id_col_name,-1).limit(1)
     for doc in docs:
-        print(doc)
+        return doc[id_col_name] + 1
 
 def get_next_subtask_id(subtasks):
     if len(subtasks) == 0:
