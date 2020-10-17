@@ -26,8 +26,8 @@ def register():
     password = data.get('password')
     phone = data.get('phone')
     token = hashlib.md5((first_name + last_name + login).encode() + os.urandom(16)).hexdigest()
-    #user = {'login': login,'first_name':first_name, 'last_name':last_name, 'password':generate_password_hash(password), 'phone': phone, 'isAdmin':False, 'token':token}
-    user = {'login': login,'first_name':first_name, 'last_name':last_name, 'password':generate_password_hash(password), 'phone': phone, 'isAdmin':False}
+    #user = {'login': login,'first_name':first_name, 'last_name':last_name, 'password':generate_password_hash(password), 'phone': phone, 'isAdmin':False, 'tasks':[], 'token':token}
+    user = {'login': login,'first_name':first_name, 'last_name':last_name, 'password':generate_password_hash(password), 'phone': phone, 'isAdmin':False, 'tasks':[]}
     doc = users_col.insert_one(user)
     #session.clear()
     #session['user_id'] = doc.inserted_id  # str()
@@ -41,6 +41,7 @@ def register_admin():
 @bp.route('/login/', methods=['POST'])
 def login_users():
     data = request.get_json(silent = True)
+    print(data)
     login = data.get('login')
     password = data.get('password')
     users_col = database.get_db_connection()[database.USERS_COLLECTION_NAME]#DATABASE = DCR_VO_DATABASE
@@ -53,7 +54,7 @@ def login_users():
         token = hashlib.md5((first_name + last_name + login).encode() + os.urandom(16)).hexdigest()
         #users_col.update({'login':login},{"$set":{'token':token}})
         #session.clear()
-        #session['user_id'] = user['_id'].toString() /? 
+        #session['user_id'] = str(user['_id'])
         credentials = {'token': token, 'first_name': first_name, 'second_name': last_name}
         return  jsonify(credentials = credentials)
     else:
