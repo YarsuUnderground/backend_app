@@ -15,7 +15,10 @@ def get_tasks():
         data = request.args
     tags = data.get('tags')
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME] 
-    tasks = tasks_col.find({'tags': {"$in": tags}})
+    documents = tasks_col.find({'tags': {"$in": tags}})
+    tasks = []
+    for cursor in documents:
+        tasks.append(cursor)
     """
     for cursor in tasks_col.find({}):
         for tag in cursor['tags']:
