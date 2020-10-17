@@ -20,6 +20,7 @@ def notify_executors(users_col, task_id, executors, action="$push"):
 def create_task():
     data = request.get_json(silent = True)
     print(data)
+    print(request.data)
     if data is None:
         data = request.args 
     print(data)
