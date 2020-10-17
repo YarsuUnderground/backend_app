@@ -28,17 +28,6 @@ def create_app():
     @app.route('/', methods=['GET', 'POST'])
     def hello_world():
         return 'Hello, World!'
-
-    @app.route('/db/', methods=['GET','POST'])
-    def get_db():
-        client = MongoClient(DATABASE_URI)
-        db = client[DB_NAME]
-        users_col = db['Users']
-        admins_col = db['Admins']
-        tasks_col = db['Tasks']
-        return "Done!"
-        #dcr_vo = client['DCR_VO_DATABASE']
-        #col = db.listingandreviews
     """
     @app.errorhandler(HTTPException)
     def handle_exception(e):

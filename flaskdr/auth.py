@@ -4,9 +4,8 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from bson import json_util
 from bson.objectid import ObjectId
 import functools,json,os, hashlib
-from . import database 
+from . import database, helper
 #from flaskdr.user import User 
-# добавить проверки!
 # сессии!
 bp = Blueprint('/auth', __name__, url_prefix='/auth')
 
@@ -21,15 +20,15 @@ def register():
     first_name = data.get('first_name')
     last_name = data.get('second_name')
     login = data.get('email')
-    users_col = database.get_db_connection()[database.USERS_COLLECTION_NAME]#DATABASE = DCR_VO_DATABASE
+    users_col = database.get_db_connection()[database.USERS_COLLECTION_NAME]
     doc = users_col.find_one({"login":login})
     if doc is not None:
         return Response(status=401)
     password = data.get('password')
     phone = data.get('phone')
     token = hashlib.md5((first_name + last_name + login).encode() + os.urandom(16)).hexdigest()
-    #user = {'login': login,'first_name':first_name, 'last_name':last_name, 'password':generate_password_hash(password), 'phone': phone, 'isAdmin':False, 'tasks':[], 'token':token}
-    user = {'login': login,'first_name':first_name, 'last_name':last_name, 'password':generate_password_hash(password), 'phone': phone, 'isAdmin':False, 'tasks':[], 'token':token}
+    id = helper.get_next_id(users_col,'_id')
+    user = {'_id':id, 'login': login,'first_name':first_name, 'last_name':last_name, 'password':generate_password_hash(password), 'phone': phone, 'isAdmin':False, 'tasks':[], 'token':token}
     doc = users_col.insert_one(user)
     #session.clear()
     #session['user_id'] = doc.inserted_id  # str()
@@ -54,11 +53,11 @@ def login_users():
     elif check_password_hash(user['password'],password):
         first_name, last_name = user['first_name'] , user['last_name']
         # или генерировать только однажды?
-        token = hashlib.md5((first_name + last_name + login).encode() + os.urandom(16)).hexdigest()
+        #token = hashlib.md5((first_name + last_name + login).encode() + os.urandom(16)).hexdigest()
         #users_col.update({'login':login},{"$set":{'token':token}})
         #session.clear()
         #session['user_id'] = str(user['_id'])
-        credentials = {'token': token, 'first_name': first_name, 'second_name': last_name}
+        credentials = {'token': user['token'], 'first_name': first_name, 'second_name': last_name}
         return  jsonify(credentials = credentials)
     else:
         return Response(status=401)
