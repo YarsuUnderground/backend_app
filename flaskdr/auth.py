@@ -26,7 +26,7 @@ def register():
     #token = (first_name + last_name + login).encode() + os.urandom(16)
     user = {'login': login,'first_name':first_name, 'last_name':last_name, 'password':generate_password_hash(password), 'phone': phone}
     users_col.insert_one(user)
-    return jsonify(code = 200, token = token)
+    return jsonify(code = 200)
 
 @bp.route('/register_admin', methods=['POST'])
 def register_admin():
