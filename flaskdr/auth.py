@@ -11,16 +11,16 @@ bp = Blueprint('/auth', __name__, url_prefix='/auth')
 @bp.route('/register/', methods=['GET','POST'])
 def register():
     if request.method == 'GET':
-        return "GET-method" + url_for('register')
+        return "GET-method inside /auth/register" 
     else:
-        return "POST_method" + url_for('register')
+        return "POST_method inside /auth/register"
 
 @bp.route('/login/', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        return "GET-method" + url_for('register')
+        return "GET-method inside /auth/login"
     else:
-        return "POST_method" + url_for('register')
+        return "POST_method inside /auth/login"
 
 @bp.before_app_request
 def initalize_logged_user():
