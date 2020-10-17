@@ -15,13 +15,18 @@ def create_task():
     if data is None:
         data = request.args
     #number = data.get('number')
-    title = data.get('title')
+    id = data.get('id')
+    creator_id = data.get('creatorId')
+    name = data.get('name')
     description = data.get('description')
+    tags = data.get('tags')
     deadline = requests.get('deadline') # to datetime.datetime?
-    executors = data.get('executors')
+    performers = data.get('performers')
+    subtasks = data.get('subtasks')
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
-    #task = {}
-    task = {'number': number, 'title': title, 'description':description, 'deadline': datetime.now(), 'executors': executors }
+    #task = {} string
+    #task = {'_id':ObjectId(id), 'creator_id':ObjectId(id), 'name': name, 'description':description, 'tags':tags, 'deadline': deadline, 'performers': performers, 'subtasks':subtasks }
+    task = {'_id':id, 'creator_id':creator_id, 'name': name, 'description':description, 'tags':tags, 'deadline': deadline, 'performers': performers, 'subtasks':subtasks }
     tasks_col.insert_one(task)
 
 @ta.route('/delete/', methods=['GET', 'DELETE'])

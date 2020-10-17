@@ -70,6 +70,17 @@ Task Entity:
 'description': 'fregerhbtrhbtrhtrhrt',
 'deadline': Object(datetime.datetime)
 'executers': ['user_id1', 'user_id2', 'user_id3'] # or 'login'
+'subtasks': ['subtask_id1', 'subtask_id2', 'subtask_id3']
+}
+
+Subtask Entity:
+{
+    '_id':ObjectId('fwiorjgnregiuerge'),
+    'number': 1233443,
+    'title':'task1',
+    'description': 'fregerhbtrhbtrhtrhrt',
+    'deadline': Object(datetime.datetime)
+    'executers': ['user_id1', 'user_id2', 'user_id3'] # or 'login'
 }
 
 Image Entity:
@@ -79,4 +90,53 @@ Image Entity:
 'img': raw_object
 }
 
+"""
+
+"""
+class Task {
+int id;
+
+// id создателя
+int creatorId;
+
+// название, описание
+String name, description;
+
+// срок сдачи
+DateTime deadline;
+
+List<String> tags;
+
+// исполнители
+List<int> performers;
+List<int> subtasks;
+}
+
+class SubTask {
+int id;
+
+int creatorId;
+
+String name, description;
+
+DateTime deadline;
+
+// исполнители
+List<int> performers;
+
+/*
+0 - не выполнено
+1 - выполняется
+2 - выполнено
+*/
+int status;
+}
+class User {
+String id;
+String firstName;
+String secondName;
+String isAdmin;
+String email;
+String phone;
+}
 """
