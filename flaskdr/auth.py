@@ -20,15 +20,17 @@ def register():
     last_name = data.get('second_name')
     login = data.get('email')
     users_col = database.get_db_connection()[database.USERS_COLLECTION_NAME]#DATABASE = DCR_VO_DATABASE
-    if users_col.find_one({"login":login}) is not None:
+    doc = users_col.find_one({"login":login})
+    if doc is not None:
         return Response(status=401)
     password = data.get('password')
     phone = data.get('phone')
     token = hashlib.md5((first_name + last_name + login).encode() + os.urandom(16)).hexdigest()
+    #user = {'login': login,'first_name':first_name, 'last_name':last_name, 'password':generate_password_hash(password), 'phone': phone, 'isAdmin':False, 'token':token}
     user = {'login': login,'first_name':first_name, 'last_name':last_name, 'password':generate_password_hash(password), 'phone': phone, 'isAdmin':False}
-    users_col.insert_one(user)
+    doc = users_col.insert_one(user)
     #session.clear()
-    #session['user_id'] = users_col.find_one({'login':login'})['_id'].toString()
+    #session['user_id'] = doc.inserted_id  # str()
     data = {'token':token}
     return jsonify(data)
 
@@ -50,7 +52,8 @@ def login_users():
         # или генерировать только однажды?
         token = hashlib.md5((first_name + last_name + login).encode() + os.urandom(16)).hexdigest()
         #users_col.update({'login':login},{"$set":{'token':token}})
-        session['user_id'] = 
+        #session.clear()
+        #session['user_id'] = user['_id'].toString() /? 
         credentials = {'token': token, 'first_name': first_name, 'second_name': last_name}
         return  jsonify(credentials = credentials)
     else:
