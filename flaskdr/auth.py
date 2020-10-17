@@ -23,7 +23,7 @@ def register():
         return jsonify(code=-2, messages="User with same login already exists")
     password = data.get('password')
     phone = data.get('phone')
-    token = (first_name + last_name + login).encode() + os.urandom(16)
+    #token = (first_name + last_name + login).encode() + os.urandom(16)
     user = {'login': login,'first_name':first_name, 'last_name':last_name, 'password':generate_password_hash(password), 'phone': phone}
     users_col.insert_one(user)
     return jsonify(code = 200, token = token)
@@ -55,8 +55,6 @@ def login_users():
         credentials = {'token':hashlib.md5(token).hexdigest(), 'first_name': first_name, 'last_name': last_name}
         return  jsonify( code = code, credentials = credentials)
     else:
-        code = -2
-        flash("Неверный пароль")
     return jsonify(code = code, messages=get_flashed_messages())
 
 @bp.route('/login_admin/', methods=['POST'])
