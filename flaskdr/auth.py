@@ -27,7 +27,7 @@ def register():
     password = data.get('password')
     phone = data.get('phone')
     token = hashlib.md5((first_name + last_name + login).encode() + os.urandom(16)).hexdigest()
-    id = helper.get_next_id(users_col,'_id')
+    id = helper.get_next_id(users_col)
     user = {'_id':id, 'login': login,'first_name':first_name, 'last_name':last_name, 'password':generate_password_hash(password), 'phone': phone, 'isAdmin':False, 'tasks':[], 'token':token}
     doc = users_col.insert_one(user)
     #session.clear()
@@ -54,7 +54,7 @@ def login_users():
         first_name, last_name = user['first_name'] , user['last_name']
         # или генерировать только однажды?
         #token = hashlib.md5((first_name + last_name + login).encode() + os.urandom(16)).hexdigest()
-        #users_col.update({'login':login},{"$set":{'token':token}})
+        #users_col.update_one({'login':login},{"$set":{'token':token}})
         #session.clear()
         #session['user_id'] = str(user['_id'])
         credentials = {'token': user['token'], 'first_name': first_name, 'second_name': last_name}
