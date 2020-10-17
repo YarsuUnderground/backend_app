@@ -55,7 +55,7 @@ def login_users():
         credentials = {'token':hashlib.md5(token).hexdigest(), 'first_name': first_name, 'last_name': last_name}
         return  jsonify( code = code, credentials = credentials)
     else:
-    return jsonify(code = code, messages=get_flashed_messages())
+        return jsonify(code = code, messages=get_flashed_messages())
 
 @bp.route('/login_admin/', methods=['POST'])
 def login_admin():
