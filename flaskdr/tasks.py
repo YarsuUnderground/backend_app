@@ -29,7 +29,7 @@ def create_task():
     new_id = helper.get_next_id(tasks_col,'_id')
     task = {'_id':new_id, 'creator_id':creator_id, 'name': name, 'description':description, 'tags':tags, 'deadline': deadline, 'performers': performers, 'subtasks':subtasks }
     tasks_col.insert_one(task)
-    notify_executors(database.get_db_connection()[database.USERS_COLLECTION_NAME],new_id,performers, action="$push")
+    notify_executors(database.get_db_connection()[database.USERS_COLLECTION_NAME].find(),new_id,performers, action="$push")
     return Response(status = 200)
 
 @ta.route('/create_subtask/', methods=['GET', 'POST',])
