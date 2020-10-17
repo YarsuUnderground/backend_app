@@ -22,19 +22,16 @@ def get_id():
 
 @us.route('/user_data/', methods=['GET', 'POST'])
 def get_user():
-    token = request.args.get('token')
+    id = request.args.get('id')
     users_col = database.get_db_connection()[database.USERS_COLLECTION_NAME]
-    doc = users_col.find_one({'token': token}) 
+    doc = users_col.find_one({'_id': id}) 
     data = {"first_name":doc['first_name'],"second_name":doc['last_name'],"isAdmin":doc['isAdmin'],"email":doc['login'],"phone":doc['phone']}
     return jsonify(data)
 
-
-
 @us.route('/user_tasks/', methods=['GET', 'POST'])
 def get_user_tasks():
-    token = request.args.get('token')
+    user_id = int(request.args.get('id'))
     users_col = database.get_db_connection()[database.USERS_COLLECTION_NAME]
-    user_id = users_col.find_one({'token':token})['_id']
     tasks = []
     documents = database.get_db_connection()[database.TASKS_COLLECTION_NAME].find()
     for cursor in documents:
