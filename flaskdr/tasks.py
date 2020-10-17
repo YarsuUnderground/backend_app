@@ -10,6 +10,8 @@ from datetime import datetime
 ta = Blueprint('/tasks',__name__, url_prefix='/tasks')
 
 def notify_executors(users_col, task_id, executors, action="$push"):
+    if executors is None:
+        return
     for executor in executors:
         users_col.update_one({'id': executor}, {f"{action}":{"tasks":task_id}})
 
