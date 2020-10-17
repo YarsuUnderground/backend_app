@@ -12,16 +12,12 @@ ta = Blueprint('/tasks',__name__, url_prefix='/tasks')
 def notify_executors(users_col, task_id, executors, action="$push"):
     if executors is None:
         return
-    print("Executors are present")
-    print(executors)
     for executor in executors:
         users_col.update_one({'_id': executor}, {"{}".format(action):{"tasks":task_id}})
 
 @ta.route('/create/', methods=['GET', 'POST'])
 def create_task():
     data = request.get_json(silent = True)
-    print(data)
-    print(request.data)
     if data is None:
         data = request.args 
     print(data)

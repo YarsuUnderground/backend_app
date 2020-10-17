@@ -36,7 +36,7 @@ def get_user_tasks():
     documents = database.get_db_connection()[database.TASKS_COLLECTION_NAME].find()
     for cursor in documents:
         if user_id in cursor['performers']:
-            tasks.add(cursor)
+            tasks.append(cursor)
     return jsonify(tasks)
 
 @us.route('/user_subtasks/', methods=['GET', 'POST'])
@@ -48,7 +48,7 @@ def get_user_subtasks():
     documents = database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME].find()
     for cursor in documents:
         if user_id in cursor['performers']:
-            tasks.add(cursor)
+            tasks.append(cursor)
     return jsonify(subtasks)
 
 
