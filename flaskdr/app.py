@@ -43,13 +43,12 @@ def create_app():
     @app.errorhandler(HTTPException)
     def handle_exception(e):
         if isinstance(e,InternalServerError):
-            print(traceback.format_exc())
-            return jsonify(error = -1 , messages = "Упс,произошла ошибка на сервере. Попробуйте выполнить действие ещё раз")
-        return jsonify(error = -2 , messages = "Упс,произошла ошибка при передаче данных. Попробуйте ещё раз")
+            return Response(status=500)
+        return Response(status=500)
        
     @app.errorhandler(ConnectionFailure)
     def database_exception(e):
         print(traceback.format_exc())
-        jsonify(error = -3 , messages = "Не удаётся выполнить запрос к базе данных. Попробуйте ещё раз")
+        return Response(status_code=500)
     """
     return app

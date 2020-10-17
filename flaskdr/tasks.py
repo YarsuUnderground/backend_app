@@ -6,8 +6,12 @@ from bson.objectid import ObjectId
 import functools,json,os, hashlib
 from . import database, helper
 from datetime import datetime
-
+#subtasks notification
 ta = Blueprint('/tasks',__name__, url_prefix='/tasks')
+
+def notify_executors(users_col, task_id, executors, action="$push"):
+    for executor in executors:
+        users_col.update({'id': executor}, {f"{action}":{"tasks":task_id}})
 
 @ta.route('/create/', methods=['GET', 'POST'])
 def create_task():
@@ -22,9 +26,11 @@ def create_task():
     deadline = requests.get('deadline') # to datetime.datetime?
     performers = data.get('performers') or []
     subtasks = data.get('subtasks') or []
-    task = {'_id':helper.get_next_id(tasks_col,'_id'), 'creator_id':creator_id, 'name': name, 'description':description, 'tags':tags, 'deadline': deadline, 'performers': performers, 'subtasks':subtasks }
-    # пользователя тоже добавить
+    new_id = helper.get_next_id(tasks_col,'_id')
+    task = {'_id':new_id, 'creator_id':creator_id, 'name': name, 'description':description, 'tags':tags, 'deadline': deadline, 'performers': performers, 'subtasks':subtasks }
     tasks_col.insert_one(task)
+    notify_executors(database.get_db_connection()[database.USERS_COLLECTION_NAME],new_id,performers, action="$push")
+    return Response(status = 200)
 
 @ta.route('/create_subtask/', methods=['GET', 'POST',])
 def create_subtask():
@@ -44,6 +50,7 @@ def create_subtask():
     subtask = {'_id':new_id, 'creator_id':creator_id, 'name': name, 'description':description, 'deadline': deadline, 'performers': performers, 'status':status}
     subtasks_col.insert_one(subtask)
     task_col.update({'id': task_id}, {"$push":{"subtasks":new_id}})
+    return Response(status = 200)
 
 @ta.route('/delete/', methods=['GET', 'DELETE'])
 def delete_task():
@@ -52,7 +59,9 @@ def delete_task():
         data = request.args
     id = data.get('id')
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
+    performers = tasks_col.find_one({'_id':id})['performers'] 
     tasks_col.delete_one({'_id':id})
+    notify_executors(database.get_db_connection()[database.USERS_COLLECTION_NAME],id,performers, action="$pull")
     return Response(status = 200)
 
 @ta.route('/delete_subtask/', methods=['GET', 'DELETE'])
@@ -68,8 +77,11 @@ def delete_subtask():
 
 @ta.route('/update/', methods=['GET', 'UPDATE'])
 def update_task():
-    pass
-
+    data = request.get_json(silent = True)
+    if data is None:
+        data = request.args
+    
+    
 @ta.route('/task/', methods=['GET','POST'])
 def get_task():
     data = request.get_json(silent = True)
