@@ -15,8 +15,8 @@ def get_dialogue():
         data = request.args
     tags = data.get('tags')
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME] 
-    #tasks = tasks_col.find({'tags': {"$in": tags}}) - вдруг сработает
     tasks = []
+    #tasks = tasks_col.find({'tags': {"$in": tags}}) - вдруг сработает
     for cursor in tasks_col.find({}):
         for tag in cursor['tags']:
             if tag in tags:

@@ -44,7 +44,7 @@ def update_task():
     pass
 
 @ta.route('/all/', methods=['GET'])
-def create_task():
+def get_all_tasks():
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
     jsonify(task_col)
     #number =  
