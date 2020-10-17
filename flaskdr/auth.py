@@ -24,7 +24,7 @@ def register():
     password = data.get('password')
     phone = data.get('phone')
     token = hashlib.md5((first_name + last_name + login).encode() + os.urandom(16)).hexdigest()
-    user = {'login': login,'first_name':first_name, 'second_name':last_name, 'password':generate_password_hash(password), 'phone': phone}
+    user = {'login': login,'first_name':first_name, 'last_name':last_name, 'password':generate_password_hash(password), 'phone': phone}
     users_col.insert_one(user)
     data = {'token':token}
     return jsonify(data)
@@ -51,7 +51,7 @@ def login_users():
         #session['user_id'] = str(doc['_id'])
         first_name, last_name = user['first_name'] , user['last_name']
         token = (first_name + last_name + login).encode() + os.urandom(16) 
-        credentials = {'token':hashlib.md5(token).hexdigest(), 'first_name': first_name, 'last_name': last_name}
+        credentials = {'token':hashlib.md5(token).hexdigest(), 'first_name': first_name, 'second_name': last_name}
         return  jsonify(credentials = credentials)
     else:
         return Response(status=401)
