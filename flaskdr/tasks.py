@@ -115,7 +115,7 @@ def get_all_tasks():
 
 @ta.route('/all_subtasks/', methods=['GET'])
 def get_all_subtasks():
-    subtasks_col = database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME]
+    subtasks_col = database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME].find()
     subtasks = []
     for subtask in subtasks_col:
         subtasks.append(subtask)
