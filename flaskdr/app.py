@@ -20,7 +20,7 @@ def create_app():
         )
     CORS(app, supports_credentials = True)
     app.register_blueprint(auth.bp)
-    app.register_blueprint(user.us)
+    #app.register_blueprint(user.us)
     #app.register_blueprint(tasks.ta)
     #app.register_blueprint(search.se)
     #app.register_blueprint(auth.us)
