@@ -1,28 +1,26 @@
 from pymongo import MongoClient
 from flask import current_app , g
-COLLECTION_NAME = "users_collection"
-DATABASE = "common_database"
+COLLECTION_NAME = "Users"
+USERS_COLLECTION_NAME = "Users"
+ADMINS_COLLECTION_NAME = "Admins"
+DATABASE = "DCR_VO_DATABASE"
 ATTEMPTS = 3
 
-def get_db_connection():
+def get_db_connection(database = DATABASE):
     if 'con' not in g:
         g.con = MongoClient(current_app.config['DATABASE_URI'])
-        g.db = MongoClient(current_app.config['DATABASE_URI'])[DATABASE]
+        g.db = MongoClient(current_app.config['DATABASE_URI'])[database]
     return g.db
 
-def get_col():
+def get_col(database = DATABASE):
     if 'db' not in g:
-        g.db = MongoClient(current_app.config['DATABASE_URI'])[DATABASE]
+        g.db = MongoClient(current_app.config['DATABASE_URI'])[database]
     return g.db[COLLECTION_NAME]
 
-def get_definite_col(con_URI = None ,db_name = None , col_name = None):
+def get_definite_col(con_URI = None ,database = DATABASE , col_name = COLLECTION_NAME):
     if con_URI is None:
-        con_URI = current_app.config['DATABASE_URI']
-    if db_name is None:
-        db_name = DATABASE
-    if col_name is None:
-        col_name = COLLECTION_NAME
-    return MongoClient(con_URI)[db_name][col_name]
+        con_URI = current_app.config[database] 
+    return MongoClient(con_URI)[database][col_name]
     
 def close_db_connetion(e = None):
     g.pop('db',None)

@@ -16,6 +16,7 @@ def create_app():
     app.config.from_mapping(
             SECRET_KEY= SECRET_KEY,
             DATABASE_URI = DATABASE_URI,
+            DB_NAME = DB_NAME
         )
     CORS(app, supports_credentials = True)
     app.register_blueprint(auth.bp)
