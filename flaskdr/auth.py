@@ -10,9 +10,11 @@ from . import database
 # сессии!
 bp = Blueprint('/auth', __name__, url_prefix='/auth')
 
-@bp.route('/register/', methods=['POST'])
+@bp.route('/register/', methods=['GET', 'POST'])
 def register():
     data = request.get_json(silent = True)
+    if data is None:
+        data = request.args
     if data is None:
         print("Register failed: couldn't parse to json")
         return Response(status=400)
@@ -38,10 +40,11 @@ def register():
 def register_admin():
     pass
 
-@bp.route('/login/', methods=['POST'])
+@bp.route('/login/', methods=['GET', 'POST'])
 def login_users():
     data = request.get_json(silent = True)
-    print(data)
+    if data is None:
+        data = request.args
     login = data.get('login')
     password = data.get('password')
     users_col = database.get_db_connection()[database.USERS_COLLECTION_NAME]#DATABASE = DCR_VO_DATABASE
