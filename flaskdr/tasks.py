@@ -3,7 +3,7 @@ from datetime import datetime , date
 from werkzeug.security import check_password_hash, generate_password_hash
 from bson import json_util
 from bson.objectid import ObjectId
-import functools,json,os, hashlib
+import functools,json,os, hashlib, json
 from . import database, helper
 from datetime import datetime
 #subtasks notification
@@ -13,8 +13,9 @@ def notify_executors(users_col, task_id, executors, action="$push"):
     if executors is None:
         return
     print("Executors are present")
+    print(executors)
     for executor in executors:
-        users_col.update_one({'id': executor}, {f"{action}":{"tasks":task_id}})
+        users_col.update_one({'id': executor}, {"{}".format(action):{"tasks":task_id}})
 
 @ta.route('/create/', methods=['GET', 'POST'])
 def create_task():
