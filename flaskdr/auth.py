@@ -16,17 +16,18 @@ def register():
         print("Register failed: couldn't parse to json")
         return jsonify(code=-1, messages="Couldn't parse to json")
     first_name = data.get('first_name')
-    last_name = data.get('last_name')
-    login = data.get('login') #email
+    last_name = data.get('second_name')
+    login = data.get('email') #email
     users_col = database.get_db_connection()[database.USERS_COLLECTION_NAME]#DATABASE = DCR_VO_DATABASE
     if users_col.find_one({"login":login}) is not None:
         return jsonify(code=-2, messages="User with same login already exists")
     password = data.get('password')
     phone = data.get('phone')
     #token = (first_name + last_name + login).encode() + os.urandom(16)
-    user = {'login': login,'first_name':first_name, 'last_name':last_name, 'password':generate_password_hash(password), 'phone': phone}
+    user = {'login': login,'first_name':first_name, 'second_name':last_name, 'password':generate_password_hash(password), 'phone': phone}
     users_col.insert_one(user)
-    return jsonify(code = 200)
+    token = {'token':hashlib.md5(token).hexdigest()}
+    return jsonify(token)
 
 @bp.route('/register_admin', methods=['POST'])
 def register_admin():
