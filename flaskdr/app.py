@@ -20,6 +20,7 @@ def create_app():
         )
     CORS(app, supports_credentials = True)
     app.register_blueprint(auth.bp)
+    #app.register_blueprint(auth.us)
     #database.init_db(app)
     #db.init_db(app) 
     @app.route('/', methods=['GET', 'POST'])

@@ -8,4 +8,22 @@ from . import database
 
 ta = Blueprint('/tasks',__name__, url_prefix='/tasks')
 
-@ta.route('/create/')
+@ta.route('/create/', methods=['GET', 'POST'])
+def create_task():
+    data = request.get_json(silent = True)
+    #number = data.get('number')
+    title = data.get('title')
+
+
+@ta.route('/delete/', methods=['DELETE'])
+def delete_task():
+    pass
+
+@ta.route('/update/', methods=['UPDATE'])
+def update_task():
+    pass
+
+@ta.route('/all/', methods=['GET'])
+def create_task():
+    data = request.get_json(silent = True)
+    #number =  
