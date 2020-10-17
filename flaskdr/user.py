@@ -4,7 +4,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from bson import json_util
 from bson.objectid import ObjectId
 import functools,json,os, hashlib
-from . import database 
+from . import database, helper
 
 us =  Blueprint('/user', __name__, url_prefix='/user')
 
