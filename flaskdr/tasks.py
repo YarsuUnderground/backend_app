@@ -11,7 +11,7 @@ ta = Blueprint('/tasks',__name__, url_prefix='/tasks')
 
 def notify_executors(users_col, task_id, executors, action="$push"):
     for executor in executors:
-        users_col.update({'id': executor}, {f"{action}":{"tasks":task_id}})
+        users_col.update_one({'id': executor}, {f"{action}":{"tasks":task_id}})
 
 @ta.route('/create/', methods=['GET', 'POST'])
 def create_task():
@@ -39,7 +39,7 @@ def create_subtask():
         data = request.args
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
     subtasks_col = database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME]
-    task_id = data.get('id')
+    task_id = data.get('taskId')
     creator_id = data.get('creatorId') # должно быть String
     name = data.get('name')
     description = data.get('description')
@@ -49,7 +49,7 @@ def create_subtask():
     new_id = helper.get_next_subtask_id(tasks_col.find({'id': task_id})['subtasks'])
     subtask = {'_id':new_id, 'creator_id':creator_id, 'name': name, 'description':description, 'deadline': deadline, 'performers': performers, 'status':status}
     subtasks_col.insert_one(subtask)
-    task_col.update({'id': task_id}, {"$push":{"subtasks":new_id}})
+    task_col.update_one({'id': task_id}, {"$push":{"subtasks":new_id}})
     return Response(status = 200)
 
 @ta.route('/delete/', methods=['GET', 'DELETE'])
@@ -72,7 +72,7 @@ def delete_subtask():
     task_id = data.get('taskId')
     subtask_id = data.get('subtaskId')
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
-    tasks_col.update({'_id': task_id},{"$pull":{'subtasks':subtask_id}})
+    tasks_col.update_one({'_id': task_id},{"$pull":{'subtasks':subtask_id}})
     return Response(status = 200)
 
 # task_id , key, value
@@ -83,6 +83,12 @@ def update_task():
         data = request.args
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
     
+@ta.route('/update_subtask/', methods=['GET', 'UPDATE'])
+def update_subtask():
+    data = request.get_json(silent = True)
+    if data is None:
+        data = request.args
+    tasks_col = database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME]    
        
 @ta.route('/task/', methods=['GET','POST'])
 def get_task():
@@ -102,5 +108,9 @@ def get_subtask():
 @ta.route('/all/', methods=['GET'])
 def get_all_tasks():
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
-    return jsonify(task_col)
-    #number =  
+    return jsonify(task_col.find({}))  
+
+@ta.route('/all_subtasks/', methods=['GET'])
+def get_all_tasks():
+    subtasks_col = database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME]
+    return jsonify(subtask_col.find({}))
