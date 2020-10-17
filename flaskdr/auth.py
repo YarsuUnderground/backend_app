@@ -11,7 +11,7 @@ bp = Blueprint('/auth', __name__, url_prefix='/auth')
 
 @bp.route('/register/', methods=['POST'])
 def register():
-    data = request.json(silent = True)
+    data = request.get_json(silent = True)
     if data is None:
         print("Register failed: couldn't parse to json")
         return jsonify(code=-1, messages="Couldn't parse to json")
@@ -32,10 +32,9 @@ def register():
 def register_admin():
     pass
 
-
 @bp.route('/login/', methods=['POST'])
 def login_users():
-    data = request.json(silent = True)
+    data = request.get_json(silent = True)
     login = data.get('login')
     password = data.get('password')
     code = 200

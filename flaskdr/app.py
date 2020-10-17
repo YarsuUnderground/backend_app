@@ -22,15 +22,9 @@ def create_app():
     app.register_blueprint(auth.bp)
     #database.init_db(app)
     #db.init_db(app) 
-    @app.route('/')
+    @app.route('/', methods=['GET', 'POST'])
     def hello_world():
         return 'Hello, World!'
-
-    @app.route('/login/', methods=['GET', 'POST'])
-    def login():
-        if request.method =='POST':
-            return "This is POST-method!"
-        return "This is GET-method"
 
     @app.route('/db/', methods=['GET','POST'])
     def get_db():
