@@ -24,8 +24,8 @@ def create_task():
     description = data.get('description')
     tags = data.get('tags')
     deadline = data.get('deadline') # to datetime.datetime?
-    performers = data.get('performers') or []
-    subtasks = data.get('subtasks') or []
+    performers = data.get('performers') 
+    subtasks = data.get('subtasks')
     new_id = helper.get_next_id(tasks_col,'_id')
     task = {'_id':new_id, 'creator_id':creator_id, 'name': name, 'description':description, 'tags':tags, 'deadline': deadline, 'performers': performers, 'subtasks':subtasks }
     tasks_col.insert_one(task)
@@ -82,6 +82,7 @@ def update_task():
     if data is None:
         data = request.args
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
+
     
 @ta.route('/update_subtask/', methods=['GET', 'UPDATE'])
 def update_subtask():
