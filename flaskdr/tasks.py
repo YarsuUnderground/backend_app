@@ -107,10 +107,16 @@ def get_subtask():
 
 @ta.route('/all/', methods=['GET'])
 def get_all_tasks():
-    tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
-    return jsonify(tasks_col.find())  
+    tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME].find()
+    tasks = []
+    for task in tasks_col:
+        tasks.append(task)
+    return jsonify(tasks)  
 
 @ta.route('/all_subtasks/', methods=['GET'])
 def get_all_subtasks():
     subtasks_col = database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME]
-    return jsonify(subtasks_col.find())
+    subtasks = []
+    for subtask in subtasks_col:
+        subtasks.append(subtask)
+    return jsonify(subtasks)
