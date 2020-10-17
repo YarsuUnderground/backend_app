@@ -2,6 +2,7 @@ from flask import request , Response, g ,flash, url_for, session , redirect ,cur
 from datetime import datetime , date
 from werkzeug.security import check_password_hash, generate_password_hash
 from bson import json_util
+from bson.objectid import ObjectId
 import functools,json,os, hashlib
 from . import database 
 #from flaskdr.user import User 
@@ -17,15 +18,17 @@ def register():
         return Response(status=400)
     first_name = data.get('first_name')
     last_name = data.get('second_name')
-    login = data.get('email') #email
+    login = data.get('email')
     users_col = database.get_db_connection()[database.USERS_COLLECTION_NAME]#DATABASE = DCR_VO_DATABASE
     if users_col.find_one({"login":login}) is not None:
         return Response(status=401)
     password = data.get('password')
     phone = data.get('phone')
     token = hashlib.md5((first_name + last_name + login).encode() + os.urandom(16)).hexdigest()
-    user = {'login': login,'first_name':first_name, 'last_name':last_name, 'password':generate_password_hash(password), 'phone': phone}
+    user = {'login': login,'first_name':first_name, 'last_name':last_name, 'password':generate_password_hash(password), 'phone': phone, 'isAdmin':False}
     users_col.insert_one(user)
+    #session.clear()
+    #session['user_id'] = users_col.find_one({'login':login'})['_id'].toString()
     data = {'token':token}
     return jsonify(data)
 
@@ -43,15 +46,12 @@ def login_users():
     if user is None:
         return Response(status=401)
     elif check_password_hash(user['password'],password):
-        #session.clear()
-        ##session.pop("user",None)
-        #session.pop("user_id",None)
-        ##session['user'] = user.get_user_data_no_passwd()
-        ##print("From login() - The user is:"+ str(session.get("user")))
-        #session['user_id'] = str(doc['_id'])
         first_name, last_name = user['first_name'] , user['last_name']
-        token = (first_name + last_name + login).encode() + os.urandom(16) 
-        credentials = {'token':hashlib.md5(token).hexdigest(), 'first_name': first_name, 'second_name': last_name}
+        # или генерировать только однажды?
+        token = hashlib.md5((first_name + last_name + login).encode() + os.urandom(16)).hexdigest()
+        #users_col.update({'login':login},{"$set":{'token':token}})
+        session['user_id'] = 
+        credentials = {'token': token, 'first_name': first_name, 'second_name': last_name}
         return  jsonify(credentials = credentials)
     else:
         return Response(status=401)
