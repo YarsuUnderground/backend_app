@@ -23,11 +23,11 @@ def register():
         return jsonify(code=-2, messages="User with same login already exists")
     password = data.get('password')
     phone = data.get('phone')
-    #token = (first_name + last_name + login).encode() + os.urandom(16)
+    token = (first_name + last_name + login).encode() + os.urandom(16)
     user = {'login': login,'first_name':first_name, 'second_name':last_name, 'password':generate_password_hash(password), 'phone': phone}
     users_col.insert_one(user)
-    token = {'token':hashlib.md5(token).hexdigest()}
-    return jsonify(token)
+    data = {'token':hashlib.md5(token).hexdigest()}
+    return jsonify(data)
 
 @bp.route('/register_admin', methods=['POST'])
 def register_admin():
