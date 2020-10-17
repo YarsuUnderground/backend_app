@@ -17,8 +17,7 @@ def notify_executors(users_col, task_id, executors, action="$push"):
 def create_task():
     data = request.get_json(silent = True)
     if data is None:
-        data = request.args
-    return data 
+        data = request.args 
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
     creator_id = data.get('creatorId') # должно быть String
     name = data.get('name')
