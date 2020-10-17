@@ -28,13 +28,15 @@ def get_user():
     data = {"first_name":doc['first_name'],"second_name":doc['last_name'],"isAdmin":doc['isAdmin'],"email":doc['login'],"phone":doc['phone']}
     return jsonify(data)
 
+
+
 @us.route('/user_tasks/', methods=['GET', 'POST'])
 def get_user_tasks():
     token = request.args.get('token')
     users_col = database.get_db_connection()[database.USERS_COLLECTION_NAME]
     user_id = users_col.find_one({'token':token})['_id']
     tasks = []
-    documents = database.get_db_connection()[database.TASKS_COLLECTION_NAME].find({})
+    documents = database.get_db_connection()[database.TASKS_COLLECTION_NAME].find()
     for cursor in documents:
         if user_id in cursor['performers']:
             tasks.add(cursor)
@@ -46,7 +48,7 @@ def get_user_subtasks():
     users_col = database.get_db_connection()[database.USERS_COLLECTION_NAME]
     user_id = users_col.find_one({'token':token})['_id']
     subtasks = []
-    documents = database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME].find({})
+    documents = database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME].find()
     for cursor in documents:
         if user_id in cursor['performers']:
             tasks.add(cursor)
