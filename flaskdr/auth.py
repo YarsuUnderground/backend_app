@@ -29,7 +29,7 @@ def register():
     phone = data.get('phone')
     token = hashlib.md5((first_name + last_name + login).encode() + os.urandom(16)).hexdigest()
     #user = {'login': login,'first_name':first_name, 'last_name':last_name, 'password':generate_password_hash(password), 'phone': phone, 'isAdmin':False, 'tasks':[], 'token':token}
-    user = {'login': login,'first_name':first_name, 'last_name':last_name, 'password':generate_password_hash(password), 'phone': phone, 'isAdmin':False, 'tasks':[]}
+    user = {'login': login,'first_name':first_name, 'last_name':last_name, 'password':generate_password_hash(password), 'phone': phone, 'isAdmin':False, 'tasks':[], 'token':token}
     doc = users_col.insert_one(user)
     #session.clear()
     #session['user_id'] = doc.inserted_id  # str()

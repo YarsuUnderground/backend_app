@@ -80,7 +80,8 @@ def update_task():
     data = request.get_json(silent = True)
     if data is None:
         data = request.args
-    
+    return 
+
     
 @ta.route('/task/', methods=['GET','POST'])
 def get_task():
