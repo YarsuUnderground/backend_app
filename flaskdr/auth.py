@@ -1,4 +1,4 @@
-from flask import request , g ,flash, url_for, session , redirect ,current_app , Blueprint , render_template , get_flashed_messages , jsonify
+from flask import request , Response, g ,flash, url_for, session , redirect ,current_app , Blueprint , render_template , get_flashed_messages , jsonify
 from datetime import datetime , date
 from werkzeug.security import check_password_hash, generate_password_hash
 from bson import json_util
@@ -14,19 +14,19 @@ def register():
     data = request.get_json(silent = True)
     if data is None:
         print("Register failed: couldn't parse to json")
-        return jsonify(code=-1, messages="Couldn't parse to json")
+        return Response(status=400)
     first_name = data.get('first_name')
     last_name = data.get('second_name')
     login = data.get('email') #email
     users_col = database.get_db_connection()[database.USERS_COLLECTION_NAME]#DATABASE = DCR_VO_DATABASE
     if users_col.find_one({"login":login}) is not None:
-        return jsonify(code=-2, messages="User with same login already exists")
+        return Response(status=401)
     password = data.get('password')
     phone = data.get('phone')
-    token = (first_name + last_name + login).encode() + os.urandom(16)
+    token = hashlib.md5((first_name + last_name + login).encode() + os.urandom(16)).hexdigest()
     user = {'login': login,'first_name':first_name, 'second_name':last_name, 'password':generate_password_hash(password), 'phone': phone}
     users_col.insert_one(user)
-    data = {'token':hashlib.md5(token).hexdigest()}
+    data = {'token':token}
     return jsonify(data)
 
 @bp.route('/register_admin', methods=['POST'])
@@ -38,12 +38,10 @@ def login_users():
     data = request.get_json(silent = True)
     login = data.get('login')
     password = data.get('password')
-    code = 200
     users_col = database.get_db_connection()[database.USERS_COLLECTION_NAME]#DATABASE = DCR_VO_DATABASE
     user = users_col.find_one({"login":login})
     if user is None:
-        error = -1
-        flash("Не существует пользователя с таким логином")
+        return Response(status=401)
     elif check_password_hash(user['password'],password):
         #session.clear()
         ##session.pop("user",None)
@@ -54,9 +52,9 @@ def login_users():
         first_name, last_name = user['first_name'] , user['last_name']
         token = (first_name + last_name + login).encode() + os.urandom(16) 
         credentials = {'token':hashlib.md5(token).hexdigest(), 'first_name': first_name, 'last_name': last_name}
-        return  jsonify( code = code, credentials = credentials)
+        return  jsonify(credentials = credentials)
     else:
-        return jsonify(code = code, messages=get_flashed_messages())
+        return Response(status=401)
 
 @bp.route('/login_admin/', methods=['POST'])
 def login_admin():
@@ -66,15 +64,15 @@ def login_admin():
     code = 200
     users_col = database.get_db_connection()[database.USERS_COLLECTION_NAME]#DATABASE = DCR_VO_DATABASE
     user = users_col.find_one({"login":login})
-
+    return "admin"
 
 @bp.route('/logout/', methods=['GET' ,'POST'])
 def logout():
     #print("From logout() - The user is: " + str(session.get("user")))
     session.clear()
-    return jsonify(error = 0, messages = "Пользователь вышел из аккаунта")
+    return Response(status=200)
 
-
+"""
 @bp.before_app_request
 def initalize_logged_user():
     user = session.get('user')
@@ -86,6 +84,7 @@ def initalize_logged_user():
         g.user = user
         #g.user_id = session.get('user_id')
         #g.user_email = session.get('user').get('email)
+"""
 
 def login_required(view):
     @functools.wraps(view)
