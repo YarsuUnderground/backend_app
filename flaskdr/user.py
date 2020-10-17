@@ -12,13 +12,13 @@ us =  Blueprint('/user', __name__, url_prefix='/user')
 def get_type():
     token = request.args.get('token')
     users_col = database.get_db_connection()[database.USERS_COLLECTION_NAME]
-    return jsonify('isAdmin': users_col.find_one({'token':token})['isAdmin'])
+    return jsonify({'isAdmin': users_col.find_one({'token':token})['isAdmin']})
 
 @us.route('/user_id/', methods=['GET', 'POST'])
 def get_id():
     token = request.args.get('token')
     users_col = database.get_db_connection()[database.USERS_COLLECTION_NAME]
-    return jsonify('id': str(users_col.find_one({'token':token})['_id']))
+    return jsonify({'id': str(users_col.find_one({'token':token})['_id'])})
 
 @us.route('/user_data/', methods=['GET', 'POST'])
 def get_user():
