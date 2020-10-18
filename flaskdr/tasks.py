@@ -101,7 +101,9 @@ def get_task():
     if data is None:
         data = request.args
     task_id = data.get('id')
-    return jsonify(database.get_db_connection()[database.TASKS_COLLECTION_NAME].find_one({'_id':task_id}))
+    task = database.get_db_connection()[database.TASKS_COLLECTION_NAME].find_one({'_id':task_id})
+    print(task)
+    return jsonify(task)
 
 #-
 @ta.route('/subtask/', methods=['GET','POST'])
