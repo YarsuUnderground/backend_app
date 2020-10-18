@@ -141,6 +141,4 @@ String isAdmin;
 String email;
 String phone;
 }
-
-{"creatorId":3, "name": "Task 7", "description":"Basic task to complete", "tags":['A', 'B', 'C', 'D', 'E'], "deadline": "2020-10-21", "performers": [2,3,4,5], "subtasks":[]}
 """
