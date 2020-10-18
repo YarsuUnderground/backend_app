@@ -22,7 +22,7 @@ def notify_on_update_tasks(users_col, task_id , executors):
     for user in users:
         if (task_id in user['tasks']) and (user['_id'] not in executors):
             users_col.update_one({'_id': int(user['_id'])}, {"$pull":{"tasks":task_id}})
-        else if (task_id not in user['tasks']) and (user['_id'] in executors):
+        elif (task_id not in user['tasks']) and (user['_id'] in executors):
             users_col.update_one({'_id': int(user['_id'])}, {"$push":{"tasks":task_id}})
         
 @ta.route('/create/', methods=['GET', 'POST'])
