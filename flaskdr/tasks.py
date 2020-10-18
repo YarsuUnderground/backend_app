@@ -67,7 +67,7 @@ def create_subtask():
     deadline = data.get('deadline') # to datetime.datetime?
     performers = data.get('performers') or []
     status = data.get('status')
-    new_id = helper.get_next_subtask_id(tasks_col.find_one({'_id': int(task_id)})['subtasks'])
+    new_id = helper.get_next_subtask_id(subtasks_col.find_one({'_id': int(task_id)})['subtasks'])
     subtask = {'_id':new_id, 'creator_id':creator_id, 'name': name, 'description':description, 'deadline': deadline, 'performers': performers, 'status':status}
     subtasks_col.insert_one(subtask)
     tasks_col.update_one({'_id': int(task_id)}, {"$push":{"subtasks":new_id}})
