@@ -95,6 +95,7 @@ def delete_subtask():
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
     subtasks_col = database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME]
     #tasks_col.update({},{"$pull":{'subtasks':subtask_id}})
+    performers = subtasks_col.find_one({'_id':int(subtask_id)})['performers']
     subtasks_col.delete_one({'_id':int(subtask_id)})
     notify_executors(database.get_db_connection()[database.USERS_COLLECTION_NAME],subtask_id,performers, action="$pull",category="subtasks")
     return Response(status = 200)
