@@ -20,6 +20,7 @@ def get_id():
     users_col = database.get_db_connection()[database.USERS_COLLECTION_NAME]
     return jsonify({'id': users_col.find_one({'token':token})['_id']})
 
+#-
 @us.route('/user_data/', methods=['GET', 'POST'])
 def get_user():
     id = request.args.get('id')
@@ -41,9 +42,8 @@ def get_user_tasks():
 
 @us.route('/user_subtasks/', methods=['GET', 'POST'])
 def get_user_subtasks():
-    token = request.args.get('token')
+    user_id = request.args.get('id')
     users_col = database.get_db_connection()[database.USERS_COLLECTION_NAME]
-    user_id = users_col.find_one({'token':token})['_id']
     subtasks = []
     documents = database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME].find()
     for cursor in documents:

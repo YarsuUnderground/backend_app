@@ -86,28 +86,40 @@ def update_task():
         data = request.args
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
 
-    
+#-    
 @ta.route('/update_subtask/', methods=['GET', 'UPDATE'])
 def update_subtask():
     data = request.get_json(silent = True)
     if data is None:
         data = request.args
-    tasks_col = database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME]    
-       
+    tasks_col = database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME]   
+
+ #-      
 @ta.route('/task/', methods=['GET','POST'])
 def get_task():
     data = request.get_json(silent = True)
     if data is None:
         data = request.args
     task_id = data.get('id')
-    return jsonify(database.get_db_connection()[database.TASKS_COLLECTION_NAME].find_one({'_id':id}))
+    cursor = database.get_db_connection()[database.TASKS_COLLECTION_NAME].find_one({'_id':id})
+    try:
+        task = cursor.next()
+    except:
+        return 
+    return jsonify(task)
 
+#-
 @ta.route('/subtask/', methods=['GET','POST'])
 def get_subtask():
     data = request.get_json(silent = True)
     if data is None:
         data = request.args
-    return jsonify(database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME].find_one({'_id':id}))
+    cursor = database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME].find_one({'_id':id})
+    try:
+        subtask = cursor.next()
+    except:
+        print("No doc")
+    return jsonify(subtask)
 
 @ta.route('/all/', methods=['GET'])
 def get_all_tasks():
