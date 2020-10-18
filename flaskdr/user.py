@@ -27,7 +27,7 @@ def get_user():
     users_col = database.get_db_connection()[database.USERS_COLLECTION_NAME]
     doc = users_col.find_one({'_id': int(user_id)})
     if doc is None:
-        return  
+        return  ""
     data = {"first_name":doc['first_name'],"second_name":doc['last_name'],"isAdmin":doc['isAdmin'],"email":doc['login'],"phone":doc['phone']}
     return jsonify(data)
 
