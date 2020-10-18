@@ -62,7 +62,7 @@ def create_subtask():
     new_id = helper.get_next_subtask_id(tasks_col.find_one({'_id': int(task_id)})['subtasks'])
     subtask = {'_id':new_id, 'creator_id':creator_id, 'name': name, 'description':description, 'deadline': deadline, 'performers': performers, 'status':status}
     subtasks_col.insert_one(subtask)
-    tasks_col.update_one({'id': task_id}, {"$push":{"subtasks":new_id}})
+    tasks_col.update_one({'_id': task_id}, {"$push":{"subtasks":new_id}})
     return Response(status = 200)
 
 @ta.route('/delete/', methods=['GET', 'DELETE'])
