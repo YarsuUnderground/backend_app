@@ -52,6 +52,7 @@ def create_subtask():
         data = request.args
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
     subtasks_col = database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME]
+    print(data)
     task_id = data.get('taskId')
     creator_id = data.get('creatorId') # должно быть String
     name = data.get('name')
