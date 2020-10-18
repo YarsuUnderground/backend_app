@@ -101,13 +101,8 @@ def get_task():
     if data is None:
         data = request.args
     task_id = data.get('id')
-    print(request.args)
-    print(task_id)
-    tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
-    task = tasks_col.find_one({'_id':int(task_id)})
-    print(task)
-    return jsonify(task)
-
+    return jsonify(database.get_db_connection()[database.TASKS_COLLECTION_NAME].find_one({'_id':int(task_id)}))
+    
 #-
 @ta.route('/subtask/', methods=['GET','POST'])
 def get_subtask():
@@ -115,7 +110,7 @@ def get_subtask():
     if data is None:
         data = request.args
     subtask_id = data.get('id')
-    return jsonify(database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME].find_one({'_id':subtask_id}))
+    return jsonify(database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME].find_one({'_id':int(subtask_id)}))
 
 @ta.route('/all/', methods=['GET'])
 def get_all_tasks():
