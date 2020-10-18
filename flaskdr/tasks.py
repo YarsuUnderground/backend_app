@@ -103,7 +103,8 @@ def get_task():
     task_id = data.get('id')
     print(request.args)
     print(task_id)
-    task = database.get_db_connection()[database.TASKS_COLLECTION_NAME].find_one({'_id':task_id})
+    tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
+    task = tasks_col.find_one({'_id':int(task_id)})
     print(task)
     return jsonify(task)
 
