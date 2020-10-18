@@ -15,6 +15,16 @@ def notify_executors(users_col, task_id, executors, action="$push"):
     for executor in executors:
         users_col.update_one({'_id': executor}, {"{}".format(action):{"tasks":task_id}})
 
+def notify_on_update_tasks(users_col, task_id , executors):
+    if executors is None:
+        return
+    users = users_col.find()
+    for user in users:
+        if (task_id in user['tasks']) and (user['_id'] not in executors):
+            users_col.update_one({'_id': int(user['_id'])}, {"$pull":{"tasks":task_id}})
+        else if (task_id not in user['tasks']) and (user['_id'] in executors):
+            users_col.update_one({'_id': int(user['_id'])}, {"$push":{"tasks":task_id}})
+        
 @ta.route('/create/', methods=['GET', 'POST'])
 def create_task():
     data = request.get_json(silent = True)
@@ -85,7 +95,9 @@ def update_task():
         data = request.args
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
     tasks_col.update_one({'_id':int(data.get('id'))},{"$set":{'name':data.get('name'), 'description':data.get('description'), 'tags':data.get('tags'), 'deadline':data.get('deadline'), 'performers':data.get('performers'), 'subtasks':data.get('subtasks') }})
+    notify_on_update_tasks(database.get_db_connection()[database.USERS_COLLECTION_NAME], data.get('id'), data.get('executors'))
     return Response(status=200)
+
 @ta.route('/update_subtask/', methods=['GET', 'UPDATE'])
 def update_subtask():
     data = request.get_json(silent = True)
