@@ -35,10 +35,10 @@ def create_task():
     creator_id = data.get('creatorId') # должно быть String
     name = data.get('name')
     description = data.get('description')
-    tags = data.get('tags')
+    tags = data.get('tags') or []
     deadline = data.get('deadline') # to datetime.datetime?
-    performers = data.get('performers') 
-    subtasks = data.get('subtasks')
+    performers = data.get('performers') or []
+    subtasks = data.get('subtasks') or []
     new_id = helper.get_next_id(tasks_col,'_id')
     task = {'_id':new_id, 'creator_id':creator_id, 'name': name, 'description':description, 'tags':tags, 'deadline': deadline, 'performers': performers, 'subtasks':subtasks }
     tasks_col.insert_one(task)
