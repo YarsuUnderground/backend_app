@@ -77,13 +77,14 @@ def delete_subtask():
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
     tasks_col.update_one({'_id': task_id},{"$pull":{'subtasks':subtask_id}})
     return Response(status = 200)
-
 # task_id , key, value
 @ta.route('/update/', methods=['GET', 'UPDATE'])
 def update_task():
     data = request.get_json(silent = True)
     if data is None:
         data = request.args
+    print(data)
+    print(requests.args)
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
     tasks_col.update_one({'_id':int(data.get('id'))},{"$set":{'name':data.get('name'), 'description':data.get('description'), 'tags':data.get('tags'), 'deadline':data.get('deadline'), 'performers':data.get('performers'), 'subtasks':data.get('subtasks') }})
    
