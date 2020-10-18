@@ -20,7 +20,6 @@ def get_id():
     users_col = database.get_db_connection()[database.USERS_COLLECTION_NAME]
     return jsonify({'id': users_col.find_one({'token':token})['_id']})
 
-#-
 @us.route('/user_data/', methods=['GET', 'POST'])
 def get_user():
     user_id = request.args.get('id')
