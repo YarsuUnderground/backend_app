@@ -85,8 +85,8 @@ def update_task():
     if data is None:
         data = request.args
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
-
-#-    
+    tasks_col.update_one({'_id':int(data.get('id'))},{"$set":{'name':data.get('name'), 'description':data.get('description'), 'tags':data.get('tags'), 'deadline':data.get('deadline'), 'performers':data.get('performers'), 'subtasks':data.get('subtasks') }})
+   
 @ta.route('/update_subtask/', methods=['GET', 'UPDATE'])
 def update_subtask():
     data = request.get_json(silent = True)
@@ -95,6 +95,7 @@ def update_subtask():
     tasks_col = database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME]   
 
  #-      
+
 @ta.route('/task/', methods=['GET','POST'])
 def get_task():
     data = request.get_json(silent = True)
@@ -103,7 +104,6 @@ def get_task():
     task_id = data.get('id')
     return jsonify(database.get_db_connection()[database.TASKS_COLLECTION_NAME].find_one({'_id':int(task_id)}))
     
-#-
 @ta.route('/subtask/', methods=['GET','POST'])
 def get_subtask():
     data = request.get_json(silent = True)
