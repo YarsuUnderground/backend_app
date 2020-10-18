@@ -101,11 +101,8 @@ def get_task():
     if data is None:
         data = request.args
     task_id = data.get('id')
-    cursor = database.get_db_connection()[database.TASKS_COLLECTION_NAME].find_one({'_id':id})
-    try:
-        task = cursor.next()
-    except:
-        return 
+    tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
+    task = tasks_col.find_one({'_id':id})
     return jsonify(task)
 
 #-
@@ -114,11 +111,8 @@ def get_subtask():
     data = request.get_json(silent = True)
     if data is None:
         data = request.args
-    cursor = database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME].find_one({'_id':id})
-    try:
-        subtask = cursor.next()
-    except:
-        print("No doc")
+    subtask_col = database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME]
+    subtask = subtask_col.find_one({'_id':id})
     return jsonify(subtask)
 
 @ta.route('/all/', methods=['GET'])
