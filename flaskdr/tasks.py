@@ -91,7 +91,7 @@ def delete_subtask():
     data = request.get_json(silent = True)
     if data is None:
         data = request.args
-    subtask_id = data.get('subtaskId')
+    subtask_id = data.get('id')
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
     subtasks_col = database.get_db_connection()[database.SUBTASKS_COLLECTION_NAME]
     tasks_col.update({},{"$pull":{'subtasks':subtask_id}})
