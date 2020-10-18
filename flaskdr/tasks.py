@@ -85,7 +85,7 @@ def update_task():
         data = request.args
     tasks_col = database.get_db_connection()[database.TASKS_COLLECTION_NAME]
     tasks_col.update_one({'_id':int(data.get('id'))},{"$set":{'name':data.get('name'), 'description':data.get('description'), 'tags':data.get('tags'), 'deadline':data.get('deadline'), 'performers':data.get('performers'), 'subtasks':data.get('subtasks') }})
-   
+    return Response(status=200)
 @ta.route('/update_subtask/', methods=['GET', 'UPDATE'])
 def update_subtask():
     data = request.get_json(silent = True)
